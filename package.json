@@ -1,0 +1,22 @@
+{
+  "name": "expres",
+  "version": "1.0.0",
+  "description": "",
+  "main": "inicio.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cors": "^2.8.3",
+    "express": "^4.15.2",
+    "express-jwt": "^5.3.0",
+    "jsonwebtoken": "^7.3.0",
+    "mongodb": "2.2.11"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
