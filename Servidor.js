@@ -3,7 +3,7 @@ const app = express();
 const cors =require("cors");
 const bodyParser = require('body-parser');
 const MongoDb=require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017/myproject';
+const url = 'mongodb://localhost:27017/dbApi';
 const mongodb=require('mongodb');
 const jwt=require('jsonwebtoken');
 const expressjwt=require('express-jwt');
@@ -155,7 +155,7 @@ app.get('/api/:collection/remove',(req,res)=>{
 //Actualizar
 app.post('/api/:collection/update',(req,res)=>{
 
-	let idAct=req.body.id;
+	let idAct=req.query.id;
 
 	if(idAct)
 	{
