@@ -154,12 +154,9 @@ app.get('/api/:collection/remove',(req,res)=>{
 });
 //Actualizar
 app.post('/api/:collection/update',(req,res)=>{
-<<<<<<< HEAD
-	let idAct=req.query.id;
 
-=======
 	let idAct=req.body.id;
->>>>>>> 16ef8d144c509c2e39613e8d59b45b87b3266785
+
 	if(idAct)
 	{
 		let collection=database.collection(req.params.collection);
