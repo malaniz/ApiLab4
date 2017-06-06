@@ -27,7 +27,7 @@ MongoDb.connect(url,(err,db)=>{
 
 
 let actualizarPermisos= ()=>{
-database.collection('permisos').find().toArray((error,data)=>{
+database.collection('rol').find().toArray((error,data)=>{
 	if(error){return console.log(error)}
 	permis=data;
 });
