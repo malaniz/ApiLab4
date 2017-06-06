@@ -41,7 +41,7 @@ app.use('/api/:collection/:action',(req,res,next)=>{
 	let action=req.params.action;
 
 	for(let roles in permis)
-	{	
+	{
 		if(permis[roles].rol===rol)
 		{
 	
@@ -49,14 +49,16 @@ app.use('/api/:collection/:action',(req,res,next)=>{
 			{
 	
 				if(permis[roles].collections[p].collection===col)
-				{	
+				{
+					console.log("Entró a la colección :"+ col+" \n la acción es "+action);
+
 					if(permis[roles].collections[p][action])
-							return next();			
+							return next();
 					else
 						return res.json({error:true,message:'Acción invalida'});
 				}
 			}
-		}	
+		}
 	}
 	res.json({error:true,message:'colección no encontrada en la base de datos'});
 });
@@ -68,7 +70,7 @@ app.use((err,req,res,next)=>{
 
 //Login
 app.post('/login',(req,res)=>{
-	
+
 	if(!('credentials' in req.body)){
 
 		return res.status(401).json({error: true, trace: "bad request"});
@@ -137,13 +139,13 @@ app.get('/api/:collection/remove',(req,res)=>{
 		let idBorrar=req.query.id;
 		let collection=database.collection(req.params.collection);
 		collection.deleteOne({_id:new mongodb.ObjectID(idBorrar)},(err,result)=>{
-			if(err) 
+			if(err)
 				res.json({error:true, message: err.message});
 			else if(result.result.n>0)
 				res.json({error:false , message:'Borrado correctamente: '+idBorrar});
 			else
-				res.json({error:true , message:'No se pudo eliminar'})			
-		});			
+				res.json({error:true , message:'No se pudo eliminar'})
+		});
 	}
 	else
 	{
@@ -152,10 +154,14 @@ app.get('/api/:collection/remove',(req,res)=>{
 });
 //Actualizar
 app.post('/api/:collection/update',(req,res)=>{
+<<<<<<< HEAD
 	let idAct=req.query.id;
 
+=======
+	let idAct=req.body.id;
+>>>>>>> 16ef8d144c509c2e39613e8d59b45b87b3266785
 	if(idAct)
-	{	
+	{
 		let collection=database.collection(req.params.collection);
 		collection.updateOne({_id: new mongodb.ObjectID(idAct)},{$set: req.body},(error,resulta)=>{
 			if(error)
@@ -166,7 +172,7 @@ app.post('/api/:collection/update',(req,res)=>{
 					if(req.params.collection==='rol')//es decir que se actualiza un rol
 						actualizarPermisos();//se actualiza el arreglo de permisos en memoria
 				}
-				//retornar success true o error 
+				//retornar success true o error
 			//res.send('Estamos en update y se actualizo el registro con id:'+ idAct);
 		});
 	}
