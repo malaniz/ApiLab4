@@ -27,7 +27,7 @@ MongoDb.connect(url,(err,db)=>{
 
 
 let actualizarPermisos= ()=>{
-database.collection('rol').find().toArray((error,data)=>{
+database.collection('permisos').find().toArray((error,data)=>{
 	if(error){return console.log(error)}
 	permis=data;
 });
@@ -39,16 +39,17 @@ app.use('/api/:collection/:action',(req,res,next)=>{
 	let rol=decoded.rol;
 	let col=req.params.collection;
 	let action=req.params.action;
+
 	for(let roles in permis)
 	{	
 		if(permis[roles].rol===rol)
 		{
-			console.log("entró a los permisos de :"+rol);
+	
 			for(let p in permis[roles].collections)
 			{
+	
 				if(permis[roles].collections[p].collection===col)
 				{	
-					console.log("Entró a la colección :"+ col+" \n la acción es "+action);
 					if(permis[roles].collections[p][action])
 							return next();			
 					else
@@ -72,7 +73,7 @@ app.post('/login',(req,res)=>{
 
 		return res.status(401).json({error: true, trace: "bad request"});
 	}
-	console.log(req.body.credentials);
+
 	database.collection('user').findOne(req.body.credentials,(err, result)=>{
 		if(err)
 			return res.json({error:true,message:err.message});
@@ -87,11 +88,23 @@ app.post('/login',(req,res)=>{
 });
 //Listar
 app.get('/api/:collection/list',(req,res)=>{
-		let collection=database.collection(req.params.collection);
-		collection.find({}).toArray((err,data)=>{
-			if(err) return res.json({error:true,message:err.message});
-			res.json(data);
-		});
+	if(req.params.collection === "*"){
+		 database.listCollections({})
+	    .toArray(function(err, items) {
+				if(err) return res.json({error:true,message:err.message});
+					res.json(items);
+		})
+	}
+	else{
+	let collection=database.collection(req.params.collection);
+
+
+	collection.find({}).toArray((err,data)=>{
+			
+		if(err) return res.json({error:true,message:err.message});
+		res.json(data);
+	});
+}
 });
 //find
 app.get('/api/:collection/find',(req,res)=>{
@@ -140,8 +153,7 @@ app.get('/api/:collection/remove',(req,res)=>{
 //Actualizar
 app.post('/api/:collection/update',(req,res)=>{
 	let idAct=req.query.id;
-	console.log(idAct);
-	console.log(req.body);
+
 	if(idAct)
 	{	
 		let collection=database.collection(req.params.collection);
