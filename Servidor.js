@@ -3,7 +3,7 @@ const app = express();
 const cors =require("cors");
 const bodyParser = require('body-parser');
 const MongoDb=require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017/dbApi';
+const url = 'mongodb://localhost:27017/myproject';
 const mongodb=require('mongodb');
 const jwt=require('jsonwebtoken');
 const expressjwt=require('express-jwt');
@@ -39,19 +39,16 @@ app.use('/api/:collection/:action',(req,res,next)=>{
 	let rol=decoded.rol;
 	let col=req.params.collection;
 	let action=req.params.action;
-
 	for(let roles in permis)
 	{
 		if(permis[roles].rol===rol)
 		{
-	
+			console.log("entró a los permisos de :"+rol);
 			for(let p in permis[roles].collections)
 			{
-	
 				if(permis[roles].collections[p].collection===col)
 				{
 					console.log("Entró a la colección :"+ col+" \n la acción es "+action);
-
 					if(permis[roles].collections[p][action])
 							return next();
 					else
@@ -75,7 +72,7 @@ app.post('/login',(req,res)=>{
 
 		return res.status(401).json({error: true, trace: "bad request"});
 	}
-
+	console.log(req.body.credentials);
 	database.collection('user').findOne(req.body.credentials,(err, result)=>{
 		if(err)
 			return res.json({error:true,message:err.message});
@@ -90,23 +87,24 @@ app.post('/login',(req,res)=>{
 });
 //Listar
 app.get('/api/:collection/list',(req,res)=>{
-	if(req.params.collection === "*"){
-		 database.listCollections({})
-	    .toArray(function(err, items) {
-				if(err) return res.json({error:true,message:err.message});
-					res.json(items);
-		})
+
+		if(req.params.collection === "*"){
+			 database.listCollections({})
+			    .toArray(function(err, items) {
+						if(err) return res.json({error:true,message:err.message});
+						res.json(items);
+			})
+		}
+		else{
+		let collection=database.collection(req.params.collection);
+
+
+		collection.find({}).toArray((err,data)=>{
+					console.log(data);
+			if(err) return res.json({error:true,message:err.message});
+			res.json(data);
+		});
 	}
-	else{
-	let collection=database.collection(req.params.collection);
-
-
-	collection.find({}).toArray((err,data)=>{
-			
-		if(err) return res.json({error:true,message:err.message});
-		res.json(data);
-	});
-}
 });
 //find
 app.get('/api/:collection/find',(req,res)=>{
